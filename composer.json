@@ -1,0 +1,22 @@
+{
+  "name": "wumvi/sqlite3dao",
+  "authors": [
+    {
+      "name": "Vitaliy Kozlenko",
+      "email": "vk@wumvi.com"
+    }
+  ],
+  "require": {
+    "ext-sqlite3": "*"
+  },
+  "require-dev": {
+  },
+  "autoload": {
+    "psr-4": {
+      "Wumvi\\Sqlite3Dao\\": "src"
+    }
+  },
+  "scripts": {
+  },
+  "license": "proprietary"
+}
