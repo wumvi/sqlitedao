@@ -26,10 +26,9 @@ class PgFetch
         return $connection->lastInsertRowID();
     }
 
-    public function exec(string $sql): void
+    public function call(string $sql, array $vars = []): void
     {
-        $connection = $this->dbManager->getConnection();
-        $connection->exec($sql);
+        $this->exec($sql, $vars);
     }
 
     /**
@@ -43,7 +42,7 @@ class PgFetch
     public function tableFetchFirst(string $sql, array $vars = []): array
     {
         $connection = $this->dbManager->getConnection();
-        $fetch = $this->fetch($sql, $vars);
+        $fetch = $this->exec($sql, $vars);
         $result = $fetch->fetchArray(SQLITE3_ASSOC);
         if ($result === false) {
             self::triggerError($connection, $sql, $vars, $this->isDebug);
@@ -54,7 +53,7 @@ class PgFetch
 
     }
 
-    private function fetch(string $sql, array $vars = []): \SQLite3Result
+    private function exec(string $sql, array $vars = []): \SQLite3Result
     {
         $connection = $this->dbManager->getConnection();
         $stmt = $connection->prepare($sql);
@@ -77,7 +76,7 @@ class PgFetch
     public function tableFetchAll(string $sql, array $vars = []): array
     {
         $result = [];
-        $fetch = $this->fetch($sql, $vars);
+        $fetch = $this->exec($sql, $vars);
         if ($fetch->numColumns()) {
             while ($row = $fetch->fetchArray(SQLITE3_ASSOC)) {
                 $result[] = $row;
