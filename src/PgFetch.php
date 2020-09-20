@@ -43,6 +43,9 @@ class PgFetch
     {
         $connection = $this->dbManager->getConnection();
         $fetch = $this->exec($sql, $vars);
+        if ($fetch->numColumns() && $fetch->columnType(0) != SQLITE3_NULL) {
+            return [];
+        }
         $result = $fetch->fetchArray(SQLITE3_ASSOC);
         if ($result === false) {
             self::triggerError($connection, $sql, $vars, $this->isDebug);
@@ -77,6 +80,9 @@ class PgFetch
     {
         $result = [];
         $fetch = $this->exec($sql, $vars);
+        if ($fetch->numColumns() && $fetch->columnType(0) != SQLITE3_NULL) {
+            return [];
+        }
         if ($fetch->numColumns()) {
             while ($row = $fetch->fetchArray(SQLITE3_ASSOC)) {
                 $result[] = $row;
