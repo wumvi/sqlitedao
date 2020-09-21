@@ -6,13 +6,14 @@ namespace Wumvi\Sqlite3Dao;
 class DbManager
 {
     private string $filename;
+    private ?\SQLite3 $connection = null;
+    private string $journalMode = '';
 
-    /** @var \SQLite3|null */
-    private $connection = null;
 
-    public function __construct(string $url)
+    public function __construct(string $url, string $journalMode = '')
     {
         $this->filename = $url;
+        $this->journalMode = $journalMode;
     }
 
     public function disconnect(): void
@@ -36,6 +37,10 @@ class DbManager
         }
 
         $this->connection = new \SQLite3($this->filename);
+
+        if ($this->journalMode !== '') {
+            $this->connection->exec('PRAGMA journal_mode = ' . $this->journalMode);
+        }
 
         return $this->connection;
     }
